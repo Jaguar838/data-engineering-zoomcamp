@@ -1,4 +1,4 @@
-# Week 6: Stream Processing
+# Module 6: Stream Processing
 
 # Code structure
 * [Java examples](java)
@@ -116,7 +116,7 @@ Please follow the steps described under [pyspark-streaming](python/streams-examp
 
 ## Homework
 
-* [2024 Homework](../cohorts/2024/)
+* [2024 Homework](../cohorts/2024/06-streaming/homework.md)
 
 ## Community notes
 
