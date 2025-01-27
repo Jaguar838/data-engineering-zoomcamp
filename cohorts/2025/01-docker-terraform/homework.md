@@ -78,13 +78,10 @@ We'll use the green taxi trips from October 2019:
 ```bash
 wget https://github.com/DataTalksClub/nyc-tlc-data/releases/download/green/green_tripdata_2019-10.csv.gz
 ```
-
 You will also need the dataset with zones:
-
 ```bash
 wget https://github.com/DataTalksClub/nyc-tlc-data/releases/download/misc/taxi_zone_lookup.csv
 ```
-
 Download this data and put it into Postgres.
 
 You can use the code from the course. It's up to you whether

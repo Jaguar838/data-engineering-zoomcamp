@@ -213,3 +213,228 @@ Did you take notes? You can share them here
 * [Notes from Manuel Guerra (Windows+WSL2 Environment)](https://github.com/ManuelGuerra1987/data-engineering-zoomcamp-notes/blob/main/1_Containerization-and-Infrastructure-as-Code/README.md)
 * [Notes from Horeb SEIDOU](https://spotted-hardhat-eea.notion.site/Week-1-Containerization-and-Infrastructure-as-Code-15729780dc4a80a08288e497ba937a37)
 * Add your notes above this line
+
+# Вступ
+
+* [![](https://markdown-videos-api.jorgenkh.no/youtube/AtRhA-NfS24)](https://www.youtube.com/watch?v=AtRhA-NfS24&list=PL3MmuxUbc_hKihpnNQ9qtTmWYy26bPrSb&index=3)
+* [Презентації](https://www.slideshare.net/AlexeyGrigorev/data-engineering-zoomcamp-introduction)
+* Огляд [Архітектури](https://github.com/DataTalksClub/data-engineering-zoomcamp#overview), [Технологій](https://github.com/DataTalksClub/data-engineering-zoomcamp#technologies) та [Попередніх знань](https://github.com/DataTalksClub/data-engineering-zoomcamp#prerequisites)
+
+Рекомендується переглядати відео у тому ж порядку, як і в цьому документі.
+
+Останнє відео (налаштування середовища) є необов'язковим, але його можна переглянути раніше, якщо у вас виникають труднощі з налаштуванням середовища та дотриманням інструкцій із відео.
+
+---
+
+# Docker + Postgres
+
+[Код](2_docker_sql)
+
+## :movie_camera: Вступ до Docker
+
+[![](https://markdown-videos-api.jorgenkh.no/youtube/EYNwNlOrpr0)](https://youtu.be/EYNwNlOrpr0&list=PL3MmuxUbc_hJed7dXYoJw8DoCuVHhGEQb&index=4)
+
+* Чому потрібен Docker
+* Створення простої "data pipeline" в Docker
+
+## :movie_camera: Завантаження даних NY Taxi у Postgres
+
+[![](https://markdown-videos-api.jorgenkh.no/youtube/2JM-ziJt0WI)](https://youtu.be/2JM-ziJt0WI&list=PL3MmuxUbc_hJed7dXYoJw8DoCuVHhGEQb&index=5)
+
+* Запуск Postgres локально за допомогою Docker
+* Використання `pgcli` для підключення до бази даних
+* Аналіз набору даних NY Taxi
+* Завантаження даних у базу даних
+
+> [!Підказка]  
+> Якщо у вас виникають проблеми з `pgcli`, перегляньте це відео для альтернативного способу підключення до бази даних у Jupyter Notebook та pandas.
+>
+> [![](https://markdown-videos-api.jorgenkh.no/youtube/3IkfkTwqHx4)](https://youtu.be/3IkfkTwqHx4&list=PL3MmuxUbc_hJed7dXYoJw8DoCuVHhGEQb&index=6)
+
+## :movie_camera: Підключення pgAdmin та Postgres
+
+[![](https://markdown-videos-api.jorgenkh.no/youtube/hCAIVe9N0ow)](https://youtu.be/hCAIVe9N0ow&list=PL3MmuxUbc_hJed7dXYoJw8DoCuVHhGEQb&index=7)
+
+* Інструмент pgAdmin
+* Docker-мережі
+
+> [!ВАЖЛИВО]  
+> Інтерфейс PgAdmin 4 змінився, дотримуйтесь наступних кроків для створення сервера:
+>
+> * Після входу в PgAdmin натисніть правою кнопкою миші на "Servers" у лівій панелі.
+> * Натисніть "Register".
+> * Натисніть "Server".
+> * Решта кроків для створення сервера такі ж, як у відео.
+
+## :movie_camera: Поміщення скрипта завантаження у Docker
+
+[![](https://markdown-videos-api.jorgenkh.no/youtube/B1WwATwf-vY)](https://youtu.be/B1WwATwf-vY&list=PL3MmuxUbc_hJed7dXYoJw8DoCuVHhGEQb&index=8)
+
+* Конвертація Jupyter Notebook у Python-скрипт
+* Параметризація скрипта за допомогою argparse
+* Docker-ізація скрипта завантаження
+
+## :movie_camera: Запуск Postgres та pgAdmin з Docker-Compose
+
+[![](https://markdown-videos-api.jorgenkh.no/youtube/hKI6PkPhpa0)](https://youtu.be/hKI6PkPhpa0&list=PL3MmuxUbc_hJed7dXYoJw8DoCuVHhGEQb&index=9)
+
+* Навіщо потрібен Docker-compose
+* Файл YAML для Docker-compose
+* Запуск кількох контейнерів за допомогою `docker-compose up`
+## :movie_camera: SQL refresher
+---
+## :movie_camera: Введення у Docker Volumes
+
+[![](https://markdown-videos-api.jorgenkh.no/youtube/dpTdEvv-8EU)](https://youtu.be/dpTdEvv-8EU&list=PL3MmuxUbc_hJed7dXYoJw8DoCuVHhGEQb&index=10)
+
+* Що таке Docker Volumes?
+* Як використовувати Docker Volumes для збереження даних?
+
+---
+
+# Terraform + Google Cloud Platform (GCP)
+
+[Код](3_data_warehouse)
+
+## :movie_camera: Введення у Terraform
+
+[![](https://markdown-videos-api.jorgenkh.no/youtube/70DhXBpp2Lk)](https://youtu.be/70DhXBpp2Lk&list=PL3MmuxUbc_hKihpnNQ9qtTmWYy26bPrSb&index=4)
+
+* Навіщо потрібен Terraform?
+* Встановлення Terraform
+* Основні концепції Terraform
+
+## :movie_camera: Налаштування облікового запису GCP
+
+[![](https://markdown-videos-api.jorgenkh.no/youtube/PeYTH3h9WWI)](https://youtu.be/PeYTH3h9WWI&list=PL3MmuxUbc_hKihpnNQ9qtTmWYy26bPrSb&index=5)
+
+* Створення облікового запису в Google Cloud Platform
+* Вибір проекту в GCP
+* Встановлення `gcloud CLI`
+
+## :movie_camera: Введення у Google Cloud Storage (GCS)
+
+[![](https://markdown-videos-api.jorgenkh.no/youtube/tHxmletuLhE)](https://youtu.be/tHxmletuLhE&list=PL3MmuxUbc_hKihpnNQ9qtTmWYy26bPrSb&index=6)
+
+* Що таке Google Cloud Storage?
+* Створення бакета в GCS вручну
+* Завантаження файлів до бакета
+
+## :movie_camera: Використання Terraform для автоматизації GCS
+
+[![](https://markdown-videos-api.jorgenkh.no/youtube/xOztlir-XIs)](https://youtu.be/xOztlir-XIs&list=PL3MmuxUbc_hKihpnNQ9qtTmWYy26bPrSb&index=7)
+
+* Створення ресурсів GCS за допомогою Terraform
+* Розгортання змін через `terraform apply`
+
+---
+
+# BigQuery
+
+[Код](4_bigquery_analytics)
+
+## :movie_camera: Введення у BigQuery
+
+[![](https://markdown-videos-api.jorgenkh.no/youtube/TyTUUw8zTBY)](https://youtu.be/TyTUUw8zTBY&list=PL3MmuxUbc_hKihpnNQ9qtTmWYy26bPrSb&index=8)
+
+* Що таке BigQuery?
+* Відмінності між OLTP та OLAP
+* Завантаження даних до BigQuery вручну
+
+## :movie_camera: BigQuery з використанням Python
+
+[![](https://markdown-videos-api.jorgenkh.no/youtube/Gbo85-mP9Yc)](https://youtu.be/Gbo85-mP9Yc&list=PL3MmuxUbc_hKihpnNQ9qtTmWYy26bPrSb&index=9)
+
+* Використання BigQuery клієнтської бібліотеки Python
+* Написання SQL-запитів до BigQuery через Python
+
+---
+
+# Airflow
+
+[Код](5_orchestration)
+
+## :movie_camera: Введення в Airflow
+
+[![](https://markdown-videos-api.jorgenkh.no/youtube/8yOJmZ2gtB4)](https://youtu.be/8yOJmZ2gtB4&list=PL3MmuxUbc_hKihpnNQ9qtTmWYy26bPrSb&index=10)
+
+* Що таке оркестрація?
+* Основні концепції Airflow
+* Встановлення Airflow локально
+
+---
+
+## :movie_camera: Запуск Airflow у Docker
+
+[![](https://markdown-videos-api.jorgenkh.no/youtube/VDXb3wY4gDk)](https://youtu.be/VDXb3wY4gDk&list=PL3MmuxUbc_hKihpnNQ9qtTmWYy26bPrSb&index=11)
+
+* Запуск Airflow у Docker
+* Використання Docker Compose для налаштування середовища
+* Огляд веб-інтерфейсу Airflow
+
+## :movie_camera: Написання першого DAG у Airflow
+
+[![](https://markdown-videos-api.jorgenkh.no/youtube/K9AnJ9_ZAXE)](https://youtu.be/K9AnJ9_ZAXE&list=PL3MmuxUbc_hKihpnNQ9qtTmWYy26bPrSb&index=12)
+
+* Що таке DAG?
+* Написання DAG у Python
+* Виконання DAG вручну
+
+## :movie_camera: Використання BigQuery з Airflow
+
+[![](https://markdown-videos-api.jorgenkh.no/youtube/tE1mg2FetH8)](https://youtu.be/tE1mg2FetH8&list=PL3MmuxUbc_hKihpnNQ9qtTmWYy26bPrSb&index=13)
+
+* Інтеграція BigQuery з Airflow
+* Виконання запитів до BigQuery у рамках DAG
+
+---
+
+# Прогнозування та машинне навчання
+
+[Код](6_ml_models)
+
+## :movie_camera: Введення в машинне навчання для аналітиків даних
+
+[![](https://markdown-videos-api.jorgenkh.no/youtube/CccKk8kI3nU)](https://youtu.be/CccKk8kI3nU&list=PL3MmuxUbc_hIjX1nJ4EyB-rA4-0jQShOa&index=2)
+
+* Що таке машинне навчання?
+* Основні типи моделей (регресія, класифікація)
+* Як аналітики можуть використовувати ML?
+
+## :movie_camera: Використання Scikit-Learn для машинного навчання
+
+[![](https://markdown-videos-api.jorgenkh.no/youtube/X5XI_6A0fCw)](https://youtu.be/X5XI_6A0fCw&list=PL3MmuxUbc_hIjX1nJ4EyB-rA4-0jQShOa&index=3)
+
+* Огляд бібліотеки Scikit-Learn
+* Побудова моделі лінійної регресії
+* Візуалізація результатів
+
+## :movie_camera: Використання BigQuery ML для побудови моделей
+
+[![](https://markdown-videos-api.jorgenkh.no/youtube/k_gK6E9CpEQ)](https://youtu.be/k_gK6E9CpEQ&list=PL3MmuxUbc_hIjX1nJ4EyB-rA4-0jQShOa&index=4)
+
+* Введення у BigQuery ML
+* Написання SQL для побудови моделей прямо у BigQuery
+* Оцінка продуктивності моделі
+
+---
+
+# Заключний проект
+
+[Код](project)
+
+## :movie_camera: Початок роботи над проектом
+
+[![](https://markdown-videos-api.jorgenkh.no/youtube/4DPXi7g9aDg)](https://youtu.be/4DPXi7g9aDg&list=PL3MmuxUbc_hKihpnNQ9qtTmWYy26bPrSb&index=14)
+
+* Вибір даних для проекту
+* Огляд кінцевого результату
+* Планування кроків для реалізації
+
+## :movie_camera: Результати і презентація
+
+[![](https://markdown-videos-api.jorgenkh.no/youtube/La0GFzhYAXU)](https://youtu.be/La0GFzhYAXU&list=PL3MmuxUbc_hKihpnNQ9qtTmWYy26bPrSb&index=15)
+
+* Демонстрація результатів
+* Аналіз продуктивності моделей
+* Презентація для кінцевих користувачів

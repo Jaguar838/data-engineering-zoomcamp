@@ -486,3 +486,490 @@ ORDER BY
     "DOLocationID" ASC
 LIMIT 100;
 ```
+
+**## Docker та SQL**
+
+**Примітки, які я використовував для підготовки відео:** [посилання](https://docs.google.com/document/d/e/2PACX-1vRJUuGfzgIdbkalPgg2nQ884CnZkCg314T_OBq-_hfcowPxNIA0-z5OtMTDzuzute9VBHMjNYZFTCc1/pub)
+
+---
+
+### Команди
+
+**Завантаження даних**
+
+```bash
+wget https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/yellow_tripdata_2021-01.csv.gz 
+```
+
+> **Примітка:** Тепер дані CSV зберігаються в папці `csv_backup`, а не в `trip+date`, як раніше.
+
+---
+
+### Запуск PostgreSQL за допомогою Docker
+
+#### Windows
+
+Запуск PostgreSQL на Windows (зверніть увагу на повний шлях):
+
+```bash
+docker run -it \
+  -e POSTGRES_USER="root" \
+  -e POSTGRES_PASSWORD="root" \
+  -e POSTGRES_DB="ny_taxi" \
+  -v c:/Users/alexe/git/data-engineering-zoomcamp/week_1_basics_n_setup/2_docker_sql/ny_taxi_postgres_data:/var/lib/postgresql/data \
+  -p 5432:5432 \
+  postgres:13
+```
+
+Якщо виникає така помилка:
+
+```
+docker run -it \
+  -e POSTGRES_USER="root" \
+  -e POSTGRES_PASSWORD="root" \
+  -e POSTGRES_DB="ny_taxi" \
+  -v e:/zoomcamp/data_engineer/week_1_fundamentals/2_docker_sql/ny_taxi_postgres_data:/var/lib/postgresql/data  \
+  -p 5432:5432 \
+  postgres:13
+
+docker: Error response from daemon: invalid mode: \Program Files\Git\var\lib\postgresql\data.
+See 'docker run --help'.
+```
+
+Змініть шлях до монтування на:
+
+```
+-v /e/zoomcamp/...:/var/lib/postgresql/data
+```
+
+---
+
+#### Linux та MacOS
+
+```bash
+docker run -it \
+  -e POSTGRES_USER="root" \
+  -e POSTGRES_PASSWORD="root" \
+  -e POSTGRES_DB="ny_taxi" \
+  -v $(pwd)/ny_taxi_postgres_data:/var/lib/postgresql/data \
+  -p 5432:5432 \
+  postgres:13
+```
+
+Якщо ви помітили, що папка `ny_taxi_postgres_data` порожня після запуску контейнера, спробуйте таке:
+
+- Видаліть папку та перезапустіть Docker (Docker створить папку знову).
+- Налаштуйте права доступу до папки за допомогою `sudo chmod a+rwx ny_taxi_postgres_data`.
+
+---
+
+### CLI для PostgreSQL
+
+**Встановлення `pgcli`:**
+
+```bash
+pip install pgcli
+```
+
+Якщо виникають проблеми з установкою `pgcli`, спробуйте так:
+
+```bash
+conda install -c conda-forge pgcli
+pip install -U mycli
+```
+
+**Використання `pgcli` для підключення до PostgreSQL:**
+
+```bash
+pgcli -h localhost -p 5432 -u root -d ny_taxi
+```
+
+---
+
+### Набір даних NY Trips
+
+**Набір даних:**
+
+- [Дані про поїздки](https://www1.nyc.gov/site/tlc/about/tlc-trip-record-data.page)
+- [Словник даних](https://www1.nyc.gov/assets/tlc/downloads/pdf/data_dictionary_trip_records_yellow.pdf)
+
+> Згідно з [вебсайтом TLC](https://www1.nyc.gov/site/tlc/about/tlc-trip-record-data.page), починаючи з 13 травня 2022 року, дані надаються у форматі ```.parquet``` замість ```.csv```.
+>
+> На сайті наведено корисне [посилання](https://www1.nyc.gov/assets/tlc/downloads/pdf/working_parquet_format.pdf), яке демонструє приклади обробки файлів ```.parquet``` і їх перетворення в DataFrame Pandas.
+>
+> Ви можете використовувати резервну копію CSV, доступну [тут](https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/yellow_tripdata_2021-01.csv.gz), для виконання інструкцій відео.
+
+```bash
+$ aws s3 ls s3://nyc-tlc
+                           PRE csv_backup/
+                           PRE misc/
+                           PRE trip data/
+```
+
+Код для роботи як із CSV, так і з Parquet файлами наведений у файлах `data-loading-parquet.ipynb` та `data-loading-parquet.py`.
+
+> **Примітка:** Вам потрібно встановити бібліотеку `pyarrow` (додайте її у свій Dockerfile).
+
+### pgAdmin
+
+Запуск pgAdmin
+
+```bash
+docker run -it \
+  -e PGADMIN_DEFAULT_EMAIL="admin@admin.com" \
+  -e PGADMIN_DEFAULT_PASSWORD="root" \
+  -p 8080:80 \
+  dpage/pgadmin4
+```
+
+### Запуск Postgres і pgAdmin разом
+
+Створення мережі
+
+```bash
+docker network create pg-network
+```
+
+Запуск Postgres (змініть шлях)
+
+```bash
+docker run -it \
+  -e POSTGRES_USER="root" \
+  -e POSTGRES_PASSWORD="root" \
+  -e POSTGRES_DB="ny_taxi" \
+  -v c:/Users/alexe/git/data-engineering-zoomcamp/week_1_basics_n_setup/2_docker_sql/ny_taxi_postgres_data:/var/lib/postgresql/data \
+  -p 5432:5432 \
+  --network=pg-network \
+  --name pg-database \
+  postgres:13
+```
+
+Запуск pgAdmin
+
+```bash
+docker run -it \
+  -e PGADMIN_DEFAULT_EMAIL="admin@admin.com" \
+  -e PGADMIN_DEFAULT_PASSWORD="root" \
+  -p 8080:80 \
+  --network=pg-network \
+  --name pgadmin-2 \
+  dpage/pgadmin4
+```
+
+### Інжекція даних
+
+Запуск локально
+
+```bash
+URL="https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/yellow_tripdata_2021-01.csv.gz"
+
+python ingest_data.py \
+  --user=root \
+  --password=root \
+  --host=localhost \
+  --port=5432 \
+  --db=ny_taxi \
+  --table_name=yellow_taxi_trips \
+  --url=${URL}
+```
+
+Створення образу
+
+```bash
+docker build -t taxi_ingest:v001 .
+```
+
+На Linux може виникнути проблема при побудові:
+
+```
+error checking context: 'can't stat '/home/name/data_engineering/ny_taxi_postgres_data''.
+```
+
+Ви можете вирішити це за допомогою `.dockerignore`:
+
+* Створіть папку `data`
+* Перемістіть `ny_taxi_postgres_data` в `data` (можливо, потрібно використовувати `sudo` для цього)
+* Примонтуйте `-v $(pwd)/data/ny_taxi_postgres_data:/var/lib/postgresql/data`
+* Створіть файл `.dockerignore` і додайте туди `data`
+* Перегляньте [це відео](https://www.youtube.com/watch?v=tOr4hTsHOzU&list=PL3MmuxUbc_hJed7dXYoJw8DoCuVHhGEQb) для додаткових відомостей
+
+Запуск скрипту з Docker
+
+```bash
+URL="https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/yellow_tripdata_2021-01.csv.gz"
+
+docker run -it \
+  --network=pg-network \
+  taxi_ingest:v001 \
+    --user=root \
+    --password=root \
+    --host=pg-database \
+    --port=5432 \
+    --db=ny_taxi \
+    --table_name=yellow_taxi_trips \
+    --url=${URL}
+```
+
+### Docker-Compose
+
+Запуск:
+
+```bash
+docker-compose up
+```
+
+Запуск у фоновому режимі:
+
+```bash
+docker-compose up -d
+```
+
+Зупинка:
+
+```bash
+docker-compose down
+```
+
+Примітка: для того, щоб налаштування pgAdmin зберігались, створіть папку `data_pgadmin`. Змініть її права за допомогою
+
+```bash
+sudo chown 5050:5050 data_pgadmin
+```
+
+та примонтуйте її до папки `/var/lib/pgadmin`:
+
+```yaml
+services:
+  pgadmin:
+    image: dpage/pgadmin4
+    volumes:
+      - ./data_pgadmin:/var/lib/pgadmin
+    ...
+```
+
+### Освіжувач SQL
+
+Попередні умови: Якщо ви йшли по курсу за вказаним порядком, Docker Compose повинен вже бути запущений з pgdatabase і pgAdmin.
+
+Ви можете виконати наступний код, використовуючи Jupyter Notebook, щоб інжектити дані для зон таксі:
+
+```python
+import pandas as pd
+from sqlalchemy import create_engine
+
+engine = create_engine('postgresql://root:root@localhost:5432/ny_taxi')
+engine.connect()
+
+!wget https://github.com/DataTalksClub/nyc-tlc-data/releases/download/misc/taxi_zone_lookup.csv
+
+df_zones = pd.read_csv("taxi_zone_lookup.csv")
+df_zones.to_sql(name='zones', con=engine, if_exists='replace')
+```
+
+Після цього ви можете перейти за адресою http://localhost:8080/browser/ для доступу до pgAdmin.
+Не забувайте клацнути правою кнопкою миші на сервер або базу даних, щоб оновити її, якщо ви не бачите нову таблицю.
+
+Тепер починайте запити!
+
+Об'єднання таблиці Yellow Taxi з таблицею Zones Lookup (неявний INNER JOIN)
+
+```sql
+SELECT
+    tpep_pickup_datetime,
+    tpep_dropoff_datetime,
+    total_amount,
+    CONCAT(zpu."Borough", ' | ', zpu."Zone") AS "pickup_loc",
+    CONCAT(zdo."Borough", ' | ', zdo."Zone") AS "dropff_loc"
+FROM 
+    yellow_taxi_trips t,
+    zones zpu,
+    zones zdo
+WHERE
+    t."PULocationID" = zpu."LocationID"
+    AND t."DOLocationID" = zdo."LocationID"
+LIMIT 100;
+```
+
+Об'єднання таблиці Yellow Taxi з таблицею Zones Lookup (явний INNER JOIN)
+
+```sql
+SELECT
+    tpep_pickup_datetime,
+    tpep_dropoff_datetime,
+    total_amount,
+    CONCAT(zpu."Borough", ' | ', zpu."Zone") AS "pickup_loc",
+    CONCAT(zdo."Borough", ' | ', zdo."Zone") AS "dropff_loc"
+FROM 
+    yellow_taxi_trips t
+JOIN 
+-- або INNER JOIN, але це менш використовувано, при написанні JOIN PostgreSQL розуміє, що ми хочемо використати INNER JOIN
+    zones zpu ON t."PULocationID" = zpu."LocationID"
+JOIN
+    zones zdo ON t."DOLocationID" = zdo."LocationID"
+LIMIT 100;
+```
+
+Перевірка записів з NULL Location ID в таблиці Yellow Taxi
+
+```sql
+SELECT
+    tpep_pickup_datetime,
+    tpep_dropoff_datetime,
+    total_amount,
+    "PULocationID",
+    "DOLocationID"
+FROM 
+    yellow_taxi_trips t
+WHERE
+    "PULocationID" IS NULL
+    OR "DOLocationID" IS NULL
+LIMIT 100;
+```
+
+Перевірка Location ID в таблиці Zones, яких немає в таблиці Yellow Taxi
+
+```sql
+SELECT
+    tpep_pickup_datetime,
+    tpep_dropoff_datetime,
+    total_amount,
+    "PULocationID",
+    "DOLocationID"
+FROM 
+    yellow_taxi_trips t
+WHERE
+    "DOLocationID" NOT IN (SELECT "LocationID" from zones)
+    OR "PULocationID" NOT IN (SELECT "LocationID" from zones)
+LIMIT 100;
+```
+
+Використання LEFT, RIGHT та OUTER JOIN, коли деякі Location ID відсутні в обох таблицях
+
+```sql
+DELETE FROM zones WHERE "LocationID" = 142;
+
+SELECT
+    tpep_pickup_datetime,
+    tpep_dropoff_datetime,
+    total_amount,
+    CONCAT(zpu."Borough", ' | ', zpu."Zone") AS "pickup_loc",
+    CONCAT(zdo."Borough", ' | ', zdo."Zone") AS "dropff_loc"
+FROM 
+    yellow_taxi_trips t
+LEFT JOIN 
+    zones zpu ON t."PULocationID" = zpu."LocationID"
+JOIN
+    zones zdo ON t."DOLocationID" = zdo."LocationID"
+LIMIT 100;
+```
+
+```sql
+SELECT
+    tpep_pickup_datetime,
+    tpep_dropoff_datetime,
+    total_amount,
+    CONCAT(zpu."Borough", ' | ', zpu."Zone") AS "pickup_loc",
+    CONCAT(zdo."Borough", ' | ', zdo."Zone") AS "dropff_loc"
+FROM 
+    yellow_taxi_trips t
+RIGHT JOIN 
+    zones zpu ON t."PULocationID" = zpu."LocationID"
+JOIN
+    zones zdo ON t."DOLocationID" = zdo."LocationID"
+LIMIT 100;
+```
+
+```sql
+SELECT
+    tpep_pickup_datetime,
+    tpep_dropoff_datetime,
+    total_amount,
+    CONCAT(zpu."Borough", ' | ', zpu."Zone") AS "pickup_loc",
+    CONCAT(zdo."Borough", ' | ', zdo."Zone") AS "dropff_loc"
+FROM 
+    yellow_taxi_trips t
+OUTER JOIN 
+    zones zpu ON t."PULocationID" = zpu."LocationID"
+JOIN
+    zones zdo ON t."DOLocationID" = zdo."LocationID"
+LIMIT 100;
+```
+
+Використання GROUP BY для обчислення кількості поїздок за день
+
+```sql
+SELECT
+    CAST(tpep_dropoff_datetime AS DATE) AS "day",
+    COUNT(1)
+FROM 
+    yellow_taxi_trips t
+GROUP BY
+    CAST(tpep_dropoff_datetime AS DATE)
+LIMIT 100;
+```
+
+Використання ORDER BY для сортування результатів запиту
+
+```sql
+-- Сортування за днем
+
+SELECT
+    CAST(tpep_dropoff_datetime AS DATE) AS "day",
+    COUNT(1)
+FROM 
+    yellow_taxi_trips t
+GROUP BY
+    CAST(tpep_dropoff_datetime AS DATE)
+ORDER BY
+    "day" ASC
+LIMIT 100;
+
+-- Сортування за кількістю
+
+SELECT
+    CAST(tpep_dropoff_datetime AS DATE) AS "day",
+    COUNT(1) AS "count"
+FROM 
+    yellow_taxi_trips t
+GROUP BY
+    CAST(tpep_dropoff_datetime AS DATE)
+ORDER BY
+    "count" DESC
+LIMIT 100;
+```
+
+Інші види агрегацій
+
+```sql
+SELECT
+    CAST(tpep_dropoff_datetime AS DATE) AS "day",
+    COUNT(1) AS "count",
+    MAX(total_amount) AS "total_amount",
+    MAX(passenger_count) AS "passenger_count"
+FROM 
+    yellow_taxi_trips t
+GROUP BY
+    CAST(tpep_dropoff_datetime AS DATE)
+ORDER BY
+    "count" DESC
+LIMIT 100;
+```
+
+Групування за кількома полями
+
+```sql
+SELECT
+    CAST(tpep_dropoff_datetime AS DATE) AS "day",
+    "DOLocationID",
+    COUNT(1) AS "count",
+    MAX(total_amount) AS "total_amount",
+    MAX(passenger_count) AS "passenger_count"
+FROM 
+    yellow_taxi_trips t
+GROUP BY
+    1, 2
+ORDER BY
+    "day" ASC, 
+    "DOLocationID" ASC
+LIMIT 100;
+```

@@ -46,3 +46,50 @@ For this course, we'll use a free version (upto EUR 300 credits).
  
 ### Terraform Workshop to create GCP Infra
 Continue [here](./terraform): `week_1_basics_n_setup/1_terraform_gcp/terraform`
+## Огляд GCP
+
+[Відео](https://www.youtube.com/watch?v=18jIzE41fJ4&list=PL3MmuxUbc_hJed7dXYoJw8DoCuVHhGEQb&index=2)
+
+### Інфраструктурні модулі проєкту в GCP:
+* Google Cloud Storage (GCS): Data Lake
+* BigQuery: Data Warehouse
+
+(Поняття пояснюються у 2-му тижні - Заливання даних)
+
+### Початкове налаштування
+
+Для цього курсу ми будемо використовувати безкоштовну версію (до 300 євро кредитів).
+
+1. Створіть обліковий запис із вашим Google email ID.
+2. Налаштуйте свій перший [проєкт](https://console.cloud.google.com/), якщо ще не зробили цього:
+   * Наприклад, "DTC DE Course", і запишіть "Project ID" (ми використаємо його пізніше для розгортання інфраструктури за допомогою TF).
+3. Налаштуйте [обліковий запис сервісу та автентифікацію](https://cloud.google.com/docs/authentication/getting-started) для цього проєкту:
+   * Спершу призначте роль `Viewer`.
+   * Завантажте ключі облікового запису сервісу (.json) для автентифікації.
+4. Завантажте [SDK](https://cloud.google.com/sdk/docs/quickstart) для локального налаштування.
+5. Встановіть змінну середовища, щоб вказати шлях до завантажених ключів GCP:
+   ```shell
+   export GOOGLE_APPLICATION_CREDENTIALS="<path/to/your/service-account-authkeys>.json"
+   
+   # Оновіть токен/сесію та перевірте автентифікацію
+   gcloud auth application-default login
+   ```
+
+### Налаштування доступу
+
+1. [IAM Ролі](https://cloud.google.com/storage/docs/access-control/iam-roles) для облікового запису сервісу:
+   * Перейдіть до розділу *IAM* у *IAM & Admin*: https://console.cloud.google.com/iam-admin/iam
+   * Натисніть на іконку *Edit principal* для вашого облікового запису сервісу.
+   * Додайте наступні ролі на додачу до *Viewer*: **Storage Admin** + **Storage Object Admin** + **BigQuery Admin**.
+
+2. Увімкніть наступні API для вашого проєкту:
+   * https://console.cloud.google.com/apis/library/iam.googleapis.com
+   * https://console.cloud.google.com/apis/library/iamcredentials.googleapis.com
+
+3. Переконайтеся, що змінна середовища `GOOGLE_APPLICATION_CREDENTIALS` встановлена:
+   ```shell
+   export GOOGLE_APPLICATION_CREDENTIALS="<path/to/your/service-account-authkeys>.json"
+   ```
+
+### Воркшоп Terraform для створення інфраструктури GCP
+Продовжуйте [тут](./terraform): `week_1_basics_n_setup/1_terraform_gcp/terraform`
