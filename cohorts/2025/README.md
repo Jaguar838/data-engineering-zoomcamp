@@ -31,7 +31,7 @@
 
 [**Module 4: Analytics Engineering**](04-analytics-engineering/)
 
-* [Homework](04-analytics-engineering/homework.md)
+* [Homework](../../HW/2025/04-analytics-engineering/04-hw.md)
 
 
 [**Module 5: Batch processing**](05-batch/)

@@ -444,3 +444,127 @@ Did you take notes? You can share them by creating a PR to this file!
 * 2023: [notes](../cohorts/2023/week_2_workflow_orchestration#community-notes) and [videos](../cohorts/2023/week_2_workflow_orchestration)
 * 2024: [notes](../cohorts/2024/02-workflow-orchestration#community-notes) and [videos](../cohorts/2024/02-workflow-orchestration)
 
+### **Оркестрація робочих процесів**
+
+Ласкаво просимо до **Модуля 2** курсу **Data Engineering Zoomcamp**! Цього тижня ми зануримося в оркестрацію робочих процесів за допомогою [Kestra](https://go.kestra.io/de-zoomcamp/github).
+
+**Kestra** — це **відкрита платформа** для оркестрації, керована подіями, яка спрощує створення як запланованих, так і подієво керованих робочих процесів. Використовуючи принципи **Infrastructure as Code**, Kestra дозволяє будувати **надійні** та **масштабовані** робочі процеси лише за допомогою кількох рядків **YAML-коду**.
+
+> [!NOTE]  
+> Всі відео цього тижня доступні у [цьому плейлисті YouTube](https://go.kestra.io/de-zoomcamp/yt-playlist).
+
+---
+
+## **Структура курсу**
+
+### **1. Основні концепції: Вступ до оркестрації та Kestra**
+
+У цьому розділі ви дізнаєтесь про **основи оркестрації робочих процесів**, їхню важливість та місце Kestra у цій екосистемі.
+
+#### **Відео**
+- **2.2.1 - Вступ до оркестрації робочих процесів**  
+  [![Відео](https://markdown-videos-api.jorgenkh.no/url?url=https%3A%2F%2Fyoutu.be%2FNp6QmmcgLCs)](https://youtu.be/Np6QmmcgLCs)
+
+- **2.2.2 - Основи Kestra**  
+  [![Відео](https://markdown-videos-api.jorgenkh.no/url?url=https%3A%2F%2Fyoutu.be%2Fo79n-EVpics)](https://youtu.be/o79n-EVpics)
+
+#### **Корисні матеріали**
+- [Швидкий старт](https://go.kestra.io/de-zoomcamp/quickstart)
+- [Встановлення Kestra через Docker Compose](https://go.kestra.io/de-zoomcamp/docker-compose)
+- [Покроковий навчальний посібник](https://go.kestra.io/de-zoomcamp/tutorial)
+- [Що таке оркестратор?](https://go.kestra.io/de-zoomcamp/what-is-an-orchestrator)
+
+---
+
+### **2. Практичний проєкт: Створення конвеєрів ETL у Kestra**
+
+Цього тижня ми створимо **ETL-конвеєри** для роботи з даними про **таксі в Нью-Йорку** (Yellow & Green Taxi) з **Taxi and Limousine Commission (TLC)**.
+
+Ви навчитеся:
+1. **Екстрактувати** дані з [CSV-файлів](https://github.com/DataTalksClub/nyc-tlc-data/releases).
+2. **Завантажувати** їх у **PostgreSQL** або **Google Cloud (GCS + BigQuery)**.
+3. **Налаштовувати** розклади та **бекфілінг** робочих процесів.
+
+> [!NOTE]  
+> Якщо ви використовуєте **PostgreSQL** із **PgAdmin** (модуль 1), переконайтеся, що у вас встановлена **версія 15 або новіша**.  
+> Команда `MERGE`, яка використовується у наших потоках Kestra, доступна лише починаючи з PostgreSQL **15**.
+
+#### **Структура проєкту**
+Файли організовані наступним чином:
+```
+.
+├── flows/
+│   ├── 01_getting_started_data_pipeline.yaml
+│   ├── 02_postgres_taxi.yaml
+│   ├── 02_postgres_taxi_scheduled.yaml
+│   ├── 03_postgres_dbt.yaml
+│   ├── 04_gcp_kv.yaml
+│   ├── 05_gcp_setup.yaml
+│   ├── 06_gcp_taxi.yaml
+│   ├── 06_gcp_taxi_scheduled.yaml
+│   └── 07_gcp_dbt.yaml
+```
+
+---
+
+### **3. Побудова ETL-конвеєрів у Kestra**
+
+#### **Перший робочий процес: "Hello World" у Kestra**
+Цей приклад демонструє **простий ETL-конвеєр**, який:
+- **Отримує дані** через HTTP-запит
+- **Обробляє** їх у **Python**
+- **Зберігає результати** у **DuckDB**
+
+```mermaid
+graph LR
+  Extract[Отримання даних через API] --> Transform[Обробка даних у Python]
+  Transform --> Query[Запит до DuckDB]
+```
+
+#### **Відео**
+- **2.2.3 - Створення ETL-конвеєра з PostgreSQL у Kestra**  
+  [![Відео](https://markdown-videos-api.jorgenkh.no/url?url=https%3A%2F%2Fyoutu.be%2FOkfLX28Ecjg%3Fsi%3DvKbIyWo1TtjpNnvt)](https://youtu.be/OkfLX28Ecjg?si=vKbIyWo1TtjpNnvt)
+
+- **2.2.4 - Керування розкладом та бекфілінгом у Kestra**  
+  [![Відео](https://markdown-videos-api.jorgenkh.no/url?url=https%3A%2F%2Fyoutu.be%2F_-li_z97zog%3Fsi%3DG6jZbkfJb3GAyqrd)](https://youtu.be/_-li_z97zog?si=G6jZbkfJb3GAyqrd)
+
+---
+
+### **4. Завантаження даних у Google Cloud Platform (GCP)**
+
+Навчившись працювати локально з PostgreSQL, ми переносимо робочі процеси у хмару.
+
+Використовуємо:
+1. **Google Cloud Storage (GCS)** — як **data lake**
+2. **BigQuery** — як **data warehouse**
+
+#### **Відео**
+- **2.2.6 - ETL у Kestra з BigQuery**  
+  [![Відео](https://markdown-videos-api.jorgenkh.no/url?url=https%3A%2F%2Fyoutu.be%2FnKqjjLJ7YXs)](https://youtu.be/nKqjjLJ7YXs)
+
+- **2.2.7 - Керування розкладом у BigQuery**  
+  [![Відео](https://markdown-videos-api.jorgenkh.no/url?url=https%3A%2F%2Fyoutu.be%2FDoaZ5JWEkH0)](https://youtu.be/DoaZ5JWEkH0)
+
+---
+
+### **5. Деплой Kestra у хмару**
+
+Ми розглянемо, як **розгортати Kestra у Google Cloud** для **автоматичного виконання** робочих процесів.
+
+#### **Відео**
+- **2.2.9 - Деплой робочих процесів у хмару через Git**  
+  [![Відео](https://markdown-videos-api.jorgenkh.no/url?url=https%3A%2F%2Fyoutu.be%2Fl-wC71tI3co)](https://youtu.be/l-wC71tI3co)
+
+---
+
+### **6. Додаткові ресурси 📚**
+- [Документація Kestra](https://go.kestra.io/de-zoomcamp/docs)
+- [Бібліотека готових сценаріїв](https://go.kestra.io/de-zoomcamp/blueprints)
+- [600+ плагінів для Kestra](https://go.kestra.io/de-zoomcamp/plugins)
+- [Kestra на GitHub](https://go.kestra.io/de-zoomcamp/github)
+- [Slack-спільнота Kestra](https://go.kestra.io/de-zoomcamp/slack)
+
+### **Домашнє завдання**
+Завдання для цього модуля доступне [тут](../cohorts/2025/02-workflow-orchestration/homework.md).
+
+---
